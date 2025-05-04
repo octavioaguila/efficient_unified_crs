@@ -24,7 +24,7 @@ from engine import training_loop, validate
 
 parser = argparse.ArgumentParser()
 
-root = "/data/mathieu/efficient_unified_crs/" # todo: change to your home directory
+root = "/content/efficient_unified_crs/" # todo: change to your home directory
 
 # general
 parser.add_argument("--seed", type=int, default=42)
@@ -36,7 +36,7 @@ parser.add_argument("--max_val_size", type=int, default=10000)
 parser.add_argument("--root", type=str, default=root)
 
 # data
-parser.add_argument("--dataset_name", type=str, default="REDIAL", choices=["REDIAL", "INSPIRED"])
+parser.add_argument("--dataset_name", type=str, default="REDIAL", choices=["REDIAL", "INSPIRED", "PEARL"])
 
 # model
 parser.add_argument("--decoder", type=str, default="../hf_models/gpt2-small") # todo: place the HuggingFace checkpoint there
@@ -117,20 +117,22 @@ parser.add_argument("--load_model_path", type=str, default="Outputs/REDIAL/temp/
 
 args = parser.parse_args()
 
-dataset_names = ["REDIAL", "INSPIRED"]
+dataset_names = ["REDIAL", "INSPIRED", "PEARL"]
 index = dataset_names.index(args.dataset_name)
 train_paths = [
     root+f"data/{args.dataset_name}/train_data_processed", # size: 10006 -> 65670
-    root+f"data/{args.dataset_name}/train_data_processed" # size: 801 -> 8152
+    root+f"data/{args.dataset_name}/train_data_processed", # size: 801 -> 8152
+    root+f"data/{args.dataset_name}/train_data_processed", # custom dataset
 ]
 test_paths = [
     root+f"data/{args.dataset_name}/test_data_processed", # size: 1342 -> 8329
     #root+f"data/{args.dataset_name}/dev_data_processed", # size: 99 -> 977
-    root+f"data/{args.dataset_name}/test_data_processed" # size: 99 -> 993
+    root+f"data/{args.dataset_name}/test_data_processed", # size: 99 -> 993
+    root+f"data/{args.dataset_name}/test_data_processed", # custom dataset
 ]
-remove_unused_items = [False, True]
-num_epochs = [10, 20] # more gains can be achieved if training longer
-train_bs = [8, 2]
+remove_unused_items = [False, True, False] # Third is my custom dataset
+num_epochs = [10, 20, 20] # more gains can be achieved if training longer
+train_bs = [8, 2, 2] # 8 for REDIAL, 2 for INSPIRED and 2 for PEARL
 
 args.train_path = train_paths[index]
 args.test_path = test_paths[index]
