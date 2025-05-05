@@ -113,7 +113,7 @@ parser.add_argument("--no_item_head", type=bool, default=False)
 parser.add_argument("--save", type=bool, default=True)
 parser.add_argument("--exp_name", type=str, default="temp")
 # checkpoint (for args.mode == "eval" only)
-parser.add_argument("--load_model_path", type=str, default="Outputs/REDIAL/temp/CRS_Train_5.pt")
+parser.add_argument("--load_model_path", type=str, default="Outputs/PEARL/temp/CRS_Train_5.pt")
 
 args = parser.parse_args()
 
