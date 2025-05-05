@@ -63,7 +63,7 @@ parser.add_argument("--task_type", type=str, default="CAUSAL_LM", help="task typ
 
 # optimization
 ### standard optimization
-parser.add_argument("--num_epochs", type=int, default=10)
+parser.add_argument("--num_epochs", type=int, default=5)
 parser.add_argument("--train_bs", type=int, default=8)
 parser.add_argument("--eval_bs", type=int, default=8)
 parser.add_argument("--num_gradients_accumulation", type=int, default=1)
@@ -131,8 +131,8 @@ test_paths = [
     root+f"data/{args.dataset_name}/test_data_processed", # custom dataset
 ]
 remove_unused_items = [False, True, False] # Third is my custom dataset
-num_epochs = [10, 20, 20] # more gains can be achieved if training longer
-train_bs = [8, 2, 2] # 8 for REDIAL, 2 for INSPIRED and 2 for PEARL
+num_epochs = [10, 20, 5] # more gains can be achieved if training longer
+train_bs = [8, 2, 16] # 8 for REDIAL, 2 for INSPIRED and 2 for PEARL
 
 args.train_path = train_paths[index]
 args.test_path = test_paths[index]
@@ -324,7 +324,8 @@ def main(args):
         optimizer = AdamW(optimizer_grouped_parameters, lr=args.lr, eps=1e-06)
         scheduler = None
         if args.scheduler == "linear":
-            num_warmup_steps = len(train_dataset) // args.train_bs // args.num_gradients_accumulation
+            # num_warmup_steps = len(train_dataset) // args.train_bs // args.num_gradients_accumulation
+            num_warmup_steps = 50
             logger.info(f"# Linear warmup steps: {num_warmup_steps}")
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_train_optimization_steps)
 
